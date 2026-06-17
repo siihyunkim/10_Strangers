@@ -30,7 +30,7 @@ const QUESTIONS = [
 const MEDIA = [
   // ========== Aku ==========
   { person: 'Aku', q: 1,  file: '[1] Where you are.jpg',       type: 'photo' },
-  { person: 'Aku', q: 2,  file: '[2] Home for now*.JPG',       type: 'photo' },
+  { person: 'Aku', q: 2,  file: '[2] Home for now*.jpg',       type: 'photo' },
   // [3] 없음 — 의도적 비움
   { person: 'Aku', q: 4,  file: null, type: 'map',
     embedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2623.9231159517803!2d8.7165976!3d48.8787422!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x479771e361c1c105%3A0xf080269e06186a53!2sPforzheim%20University!5e0!3m2!1sen!2skr!4v1781640750758!5m2!1sen!2skr',
