@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>10 Strangers</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="loading" id="loading">Loading…</div>
+
+  <!-- 화면 좌상단 고정 라벨 — 잡지/인터뷰 둘 다에서 보임 -->
+  <div class="floating-label" id="floating-label">
+    <div class="floating-label-nums" id="floating-label-nums">
+      <div data-q="1">1</div>
+      <div data-q="2">2</div>
+      <div data-q="3">3</div>
+      <div data-q="4">4</div>
+      <div data-q="5">5</div>
+      <div data-q="6">6</div>
+      <div data-q="7">7</div>
+      <div data-q="8">8</div>
+      <div data-q="9">9</div>
+      <div data-q="10">10</div>
+    </div>
+    <div class="floating-label-text">
+      <span class="text-strangers">Strangers</span>
+      <span class="text-stories">Stories</span>
+    </div>
+  </div>
+
+  <main id="pages"></main>
+
+  <div class="interview" id="interview" hidden>
+    <button class="interview-close" id="interview-close" aria-label="닫기">×</button>
+    <div class="interview-inner" id="interview-inner"></div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

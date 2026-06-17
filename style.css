@@ -1,0 +1,568 @@
+/* =========================================================
+   10 Strangers — Magazine (Figma exact: 1505 × auto)
+   14 columns × 134px rows, gap 7px, no padding
+   ========================================================= */
+
+@font-face {
+  font-family: 'Neue Haas Grotesk Display Pro';
+  src: url('fonts/NHaasGroteskDSPro-55Rg.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Neue Haas Grotesk Display Pro';
+  src: url('fonts/NHaasGroteskDSPro-25Th.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Neue Haas Grotesk Display Pro';
+  src: url('fonts/NHaasGroteskDSPro-15UltTh.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 한글 폰트 — Pretendard */
+@font-face {
+  font-family: 'Pretendard';
+  src: url('fonts/PretendardVariable.ttf') format('truetype-variations'),
+       url('fonts/PretendardVariable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('fonts/Pretendard-ExtraLight.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 한글이 포함된 텍스트 박스 — Pretendard + 작게 + 자간 넓게 */
+.has-korean {
+  font-family: 'Pretendard', 'Neue Haas Grotesk Display Pro', Helvetica, Arial, sans-serif;
+  font-size: 8px;            /* 영문 11px - 2px */
+  letter-spacing: 0;         /* 영문 -0.3px + 0.3 */
+  line-height: 2;
+}
+.has-korean.label-text {
+  font-size: 14px;           /* 영문 라벨 16px - 2px (필요 시) */
+}
+
+:root {
+  --ink: #000;
+  --bg: #ffffff;
+  --card-bg: #ffffff;
+  --muted: #888;
+  color-scheme: light;     /* ← 추가: 라이트 모드 강제 */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; }
+
+/* 스크롤바 */
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #fffce9; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #aaa; }
+* { scrollbar-width: thin; scrollbar-color: #0b0c0c transparent; }
+
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Neue Haas Grotesk Display Pro', Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.4;
+  letter-spacing: -0.3px;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 200px;
+  animation: pageFadeIn 0.5s ease;
+}
+
+/* =========================================================
+   페이지 — Figma 정확 사양 (1505 wide, 14 col × 134px rows)
+   ========================================================= */
+.page {
+  width: 1505px;
+  margin: 0 auto;
+  background: var(--bg);
+  position: relative;
+}
+.page + .page { margin-top: 7px; }  /* gap between pages = 1 row gap */
+
+.page-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  grid-auto-rows: 134px;
+  gap: 7px;
+}
+
+/* =========================================================
+   화면 좌상단 고정 라벨 — 잡지/인터뷰 양쪽에서 보임
+   잡지: "Strangers" / 인터뷰: "Stories"
+   ========================================================= */
+.floating-label {
+  position: fixed;
+  top: 22px;
+  left: max(14px, calc(50vw - 752.5px + 14px));
+  z-index: 200;
+  font-size: 16px;
+  letter-spacing: -0.45px;
+  line-height: 1.5;
+  font-family: 'Neue Haas Grotesk Display Pro', Helvetica, Arial, sans-serif;
+  color: white;
+  mix-blend-mode: exclusion;
+  transition: opacity 0.7s ease;
+}
+body.footer-in-view:not(.interview-open) .floating-label {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.floating-label-nums {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 29px;
+  text-align: center;
+}
+.floating-label-nums > div {
+  padding: 0;
+  margin: 0;
+  white-space: nowrap;
+  color: inherit;
+  user-select: none;
+  position: relative;
+}
+
+/* 잡지 모드 호버 — 번호 옆에 사람 이름 또는 "Looking for…" 표시 */
+.floating-label-nums > div::after {
+  content: attr(data-person);
+  position: absolute;
+  left: 100%;
+  top: 0;
+  margin-left: 12px;
+  white-space: nowrap;
+  font-size: 16px;
+  letter-spacing: -0.45px;
+  line-height: 1.5;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  color: inherit;
+}
+body:not(.interview-open) .floating-label-nums > div:hover::after {
+  opacity: 1;
+}
+
+/* 잡지 모드: 1-6은 클릭 가능, 7-10은 비활성 */
+body:not(.interview-open) .floating-label-nums > div.has-person {
+  cursor: pointer;
+}
+body:not(.interview-open) .floating-label-nums > div.no-person {
+  cursor: default;
+}
+body:not(.interview-open) .floating-label-nums > div.no-person::after {
+  color: var(--muted);
+}
+body:not(.interview-open) .floating-label-nums > div.filter-active {
+  /* 필터 활성 상태 — 번호 진하게, 이름 항상 표시 */
+}
+body:not(.interview-open) .floating-label-nums > div.filter-active::after {
+  opacity: 1;
+}
+
+/* 인터뷰 모드: 인디케이터로 동작 (기존) */
+body.interview-open .floating-label-nums > div {
+  cursor: pointer;
+  color: var(--muted);
+  opacity: 0.35;
+  transition: opacity 0.2s, color 0.2s;
+}
+body.interview-open .floating-label-nums > div:hover {
+  opacity: 0.8;
+}
+body.interview-open .floating-label-nums > div.active {
+  color: white;
+  opacity: 1;
+}
+/* 인터뷰 모드에서는 호버 툴팁 숨김 */
+body.interview-open .floating-label-nums > div::after {
+  display: none;
+}
+
+/* 10번은 호버 툴팁 안 보이게 (의도적 비활성) */
+.floating-label-nums > div[data-q="10"]::after {
+  display: none;
+}
+.floating-label-nums > div[data-q="10"] {
+  cursor: default;
+}
+
+/* 잡지 모드 필터 활성 시 — Strangers 텍스트 숨김 */
+body.filter-active:not(.interview-open) .text-strangers {
+  opacity: 0;
+  transform: translateY(-15px);
+}
+
+/* Strangers / Stories 텍스트 — 같은 자리, 위↔아래 슬라이드 페이드 */
+.floating-label-text {
+  position: absolute;
+  top: calc(9 * 24px);    /* 10번 라인 옆 */
+  left: 33px;
+  width: 80px;
+  height: 28px;  
+  overflow: hidden;
+}
+.floating-label-text span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+/* 잡지 모드 (기본): Strangers 보임, Stories는 아래에 숨겨짐 */
+.text-strangers {
+  opacity: 1;
+  transform: translateY(0);
+}
+.text-stories {
+  opacity: 0;
+  transform: translateY(15px);
+}
+/* 인터뷰 모드: Strangers 위로 사라지고, Stories 아래에서 올라옴 */
+body.interview-open .text-strangers {
+  opacity: 0;
+  transform: translateY(-15px);
+}
+body.interview-open .text-stories {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 기존 grid 내부의 label-block은 더 이상 안 씀 — 안전망으로 숨김 */
+.label-block { display: none; }
+
+/* =========================================================
+   푸터
+   ========================================================= */
+
+.slot-footer {
+  overflow: visible;     /* .slot의 hidden 무효화 */
+  cursor: default;
+}
+.slot-footer .footer-line {
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;       /* Figma 'normal'에 맞춤 */
+}
+.slot-footer .footer-line-empty {
+  margin: 0;
+  padding: 0;
+  height: 12px;           /* 1.2em */
+}
+.slot-footer a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.slot-footer a:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   슬롯
+   ========================================================= */
+.slot {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--card-bg);
+  transition: opacity 0.3s ease;
+}
+.slot:hover { opacity: 0.82; }
+
+.slot-media img,
+.slot-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 발췌 */
+.slot-excerpt {
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+.slot-excerpt .excerpt-text {
+  font-size: 11px;
+  line-height: 1.4;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 12;
+}
+.slot-excerpt .excerpt-text.has-korean {
+  font-family: 'Pretendard', 'Neue Haas Grotesk Display Pro', Helvetica, Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+/* 카드 호버 라벨 */
+.slot-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 4px 6px;
+  font-size: 11px;
+  letter-spacing: -0.3px;
+  color: #fff;
+  background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.slot-media:hover .slot-label { opacity: 1; }
+
+/* 필터링 — 잡지 모드에서 특정 인물만 보이기 */
+.slot-media,
+.slot-excerpt {
+  transition: opacity 0.5s ease, filter 0.5s ease, transform 0.5s ease;
+}
+.slot-media.filter-hidden,
+.slot-excerpt.filter-hidden {
+  opacity: 0;
+  filter: blur(6px);
+  transform: scale(0.97);
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   인터뷰 뷰 — 블로그형 세로 스크롤
+   좌측: 인디케이터 (sticky) / 중앙: 미디어 컬럼 / 우측: 텍스트 (sticky)
+   ========================================================= */
+.interview {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 100;
+  overflow-y: auto;
+  overscroll-behavior: contain;     /* 끝에서 잡지로 스크롤 전파 막기 */
+  animation: interviewFadeIn 300ms ease-out;
+  transition: opacity 0.6s ease;
+}
+.interview[hidden] { display: none; }
+.interview.closing {
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+@keyframes interviewFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* 인터뷰 닫는 중 — 잡지 스크롤 막기 (휠 전파 차단) */
+body.returning-to-magazine {
+  overflow: hidden;
+}
+/* 인터뷰 열려 있을 때 — body 스크롤 막기 (스크롤바 두 개 방지) */
+body.interview-open {
+  overflow: hidden;
+}
+#pages {
+  filter: saturate(0.85);
+}
+body.returning-to-magazine #pages {
+  animation: magazineReturn 0.6s ease-out;
+}
+@keyframes magazineReturn {
+  0%   { opacity: 0.6; }
+  100% { opacity: 1;   }
+}
+
+.interview-grid {
+  width: 1505px;
+  margin: 0 auto;
+  padding: 10px 10px 400px;
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  gap: 7px;
+  position: relative;
+}
+
+/* 인터뷰 페이지 내부의 인디케이터는 더 이상 안 씀 — floating label 사용 */
+.interview-indicator { display: none; }
+
+/* 중앙 미디어 컬럼 */
+.interview-media-column {
+  grid-column: 3 / span 8;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  padding-top: 12px;
+}
+.interview-media-item {
+  width: 100%;
+  background: var(--card-bg);
+  scroll-margin-top: 20px;
+}
+.interview-media-item img,
+.interview-media-item video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.interview-media-item:has(audio) {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+}
+.interview-media-item audio {
+  display: block;
+  width: 100%;
+  height: 54px;
+  background: #f0f0f0;
+  border-radius: 0;
+}
+.interview-media-item .interview-map-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #e8eaef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  letter-spacing: -0.3px;
+  color: var(--muted);
+}
+.interview-media-item .interview-map-iframe {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border: none;
+  display: block;
+}
+.interview-media-item .interview-map-open {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 14px;
+  font-size: 11px;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--ink);
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.interview-media-item .interview-map-open:hover {
+  background: var(--ink);
+  color: #fff;
+}
+.interview-media-item .interview-empty-placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  letter-spacing: -0.3px;
+  color: var(--muted);
+}
+
+/* 우측 텍스트 컬럼 — sticky */
+.interview-text-column {
+  grid-column: 11 / span 4;
+  grid-row: 1 / span 1;
+  position: sticky;
+  top: 160px;
+  align-self: start;
+  height: fit-content;
+  max-height: calc(100vh - 200px);
+  overflow: hidden;
+  padding-left: 20px;
+  padding-right: 10px;
+}
+.interview-text-caption {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  line-height: 1.4;
+  margin-bottom: 20px;
+  transition: opacity 0.3s ease;
+  word-break: keep-all;
+}
+.interview-text-body {
+  font-size: 12px;
+  letter-spacing: -0.3px;
+  line-height: 1.6;
+  color: var(--ink);
+  transition: opacity 0.3s ease;
+  word-break: keep-all;
+}
+.interview-text-body.has-korean {
+  font-family: 'Pretendard', 'Neue Haas Grotesk Display Pro', Helvetica, Arial, sans-serif;
+  font-size: 11px;
+  line-height: 1.7;
+}
+/* 질문 — 회색 + 안쪽(오른쪽)으로 들여쓰기 (옵션 A) */
+.interview-text-body .interview-text-q {
+  color: var(--muted);
+  margin-left: 16px;
+  margin-top: 16px;
+  margin-bottom: 2px;
+}
+.interview-text-body .interview-text-q:first-child {
+  margin-top: 0;
+}
+.interview-text-body .interview-text-p {
+  margin: 0;
+}
+.interview-text-body .interview-text-empty {
+  height: 8px;
+}
+.interview-text-caption.fading,
+.interview-text-body.fading {
+  opacity: 0;
+}
+
+/* 닫기 버튼 */
+.interview-close {
+  position: fixed;
+  top: 14px; right: 20px;
+  width: 30px; height: 30px;
+  font-size: 22px;
+  background: none;
+  border: none;
+  color: var(--ink);
+  cursor: pointer;
+  z-index: 101;
+  font-family: inherit;
+  line-height: 1;
+}
+
+
+.loading {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: var(--muted);
+  background: var(--bg); z-index: 200;
+}
+.loading[hidden] { display: none; }
